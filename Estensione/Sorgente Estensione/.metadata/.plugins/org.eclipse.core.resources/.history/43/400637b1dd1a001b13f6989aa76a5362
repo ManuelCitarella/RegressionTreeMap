@@ -1,0 +1,176 @@
+package tree;
+
+import java.util.TreeSet;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import data.*;
+
+
+
+public class RegressionTree  implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Node root;
+	private RegressionTree childTree[];//array di sottoalberi originanti nel nodo root, cioè vi è un elemento nell'array per ogni figlio del nodo
+
+	public RegressionTree() {
+
+	}
+
+	public RegressionTree(Data trainingSet) {
+
+		learnTree(trainingSet, 0, trainingSet.getNumberOfExamples() - 1, trainingSet.getNumberOfExamples() * 10 / 100);
+	}
+
+	
+	//da verificare se va bene metterli
+	public Node getRoot() {
+		return root;
+	}
+	
+	public RegressionTree getChildTree(int pos) {
+		return childTree[pos];
+	}
+	
+	boolean isLeaf(Data trainingSet, int begin, int end, int numberOfExamplesPerLeaf) {
+		int diff = end - begin + 1;
+		if (diff <= numberOfExamplesPerLeaf) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	private SplitNode determineBestSplitNode(Data trainingSet, int begin, int end) {
+		
+		TreeSet<SplitNode> ts = new TreeSet<SplitNode>();
+		//a non lo fa
+		//SplitNode currentNode;
+		
+		for (int i = 0; i < trainingSet.getNumberOfExplanatoryAttributes(); i++) {
+			Attribute a = trainingSet.getExplanatoryAttribute(i);
+			try {
+				if(a instanceof DiscreteAttribute){
+					//DiscreteAttribute attribute=(DiscreteAttribute)trainingSet.getExplanatoryAttribute(i);
+					ts.add(new DiscreteNode(trainingSet,begin,end,(DiscreteAttribute)a));
+				}else {
+					//mette meno roba 
+						//ContinuousAttribute attribute=(ContinuousAttribute)trainingSet.getExplanatoryAttribute(i);
+						ts.add( new ContinuousNode(trainingSet,begin,end,(ContinuousAttribute)a));
+				}
+				
+				//ts.add(currentNode);
+			}catch(NullPointerException e) {}
+		}
+
+			//intercettare eccezione dello splitnode non costruito
+		trainingSet.sort(ts.first().getAttribute(), begin, end);
+
+		return ts.first();
+	} 
+	
+	void learnTree(Data trainingSet, int begin, int end, int numberOfExamplesPerLeaf) {
+		if (isLeaf(trainingSet, begin, end, numberOfExamplesPerLeaf)) {
+			// determina la classe che compare più frequentemente nella partizione corrente
+			root = new LeafNode(trainingSet, begin, end);
+		} else // split node
+		{
+			root = determineBestSplitNode(trainingSet, begin, end);
+
+			if (root.getNumberOfChildren() > 1) {
+				childTree = new RegressionTree[root.getNumberOfChildren()];
+				for (int i = 0; i < root.getNumberOfChildren(); i++) {
+					childTree[i] = new RegressionTree();
+					childTree[i].learnTree(trainingSet, ((SplitNode) root).getSplitInfo(i).beginIndex,
+							((SplitNode) root).getSplitInfo(i).endIndex, numberOfExamplesPerLeaf);
+				}
+			} else
+				root = new LeafNode(trainingSet, begin, end);
+
+		}
+	}
+	
+	
+	
+	public String toString() {
+		String tree = root.toString() + "\n";
+
+		if (root instanceof LeafNode) {
+
+		} else // split node
+		{
+			for (int i = 0; i < childTree.length; i++)
+				tree += childTree[i];
+		}
+		return tree;
+	}
+	
+	public void printTree() {
+		System.out.println("********* TREE **********\n");
+		System.out.println(toString());
+		System.out.println("*************************\n");
+	}
+
+	
+	public void printRules() {
+	      System.out.println("*******RULES*********\n");
+	      printRules(" ");
+	      System.out.println("*********************\n");
+	    }
+	    
+	    /*Supporta il metodo public void printRules(). 
+	     * Concatena alle informazioni in current del precedente nodo quelle del nodo root 
+	     * del corrente sotto-albero (oggetto DecisionTree): se il nodo corrente è di split il metodo 
+	     * viene invocato ricorsivamente con current e le informazioni del nodo corrente, 
+	     * se è di fogliare (leaf) visualizza tutte le informazioni concatenate.
+	     */
+	  private  void printRules(String current) { //uso RTTI
+	      String str ="";
+	      SplitNode node=(SplitNode)root;
+	      for(int i=0;i<childTree.length;i++) {
+	       str=current+node.getAttribute().getName()+node.getSplitInfo(i).getComparator()+node.getSplitInfo(i).getSplitValue();
+	        if(childTree[i].root instanceof SplitNode) {
+	          str = str + " AND "; 
+	         
+	          childTree[i].printRules(str);
+	        }else if( childTree[i].root instanceof LeafNode) {
+	          str=str+ " ==> Class " +((LeafNode)childTree[i].root).getPredictedClassValue()+" ";
+	          System.out.println(str);
+	        }
+	       
+	      }
+	      
+	     
+	  }
+	  
+/*DA CONTROLLARE*/	  
+	  public void salva(String nomeFile) throws  IOException {
+			//invochiamo l'eccezione di IO perchè potrebbero 
+			//verificarsi problemi con lo stream mentre scrive sul file
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(nomeFile));
+			out.writeObject(this);//writeObject viene invocato per serializzare l'oggetto e si occuperà di salvare attributo per attributo(metodo della classe ObjectOutputStream)
+			out.writeObject(root);
+			out.writeObject(childTree);
+			//Gli attributi di classe, cioè definiti come static,NON vengono serializzati. Per poterli salvare occorre esplicitare la serializzazione richiamado
+			//sull'attributo stesso il metodo writeObject
+			out.close();
+		}
+	  
+		public static RegressionTree carica(String nomeFile) throws  FileNotFoundException,IOException, ClassNotFoundException {//IO perhcè potrebbero verificarsi problemi nella lettura del file 
+			//class not found perchè leggendo l'oggetto potrebbe essere sollevata eccezione. ci occupoiamo di essa nel main perchè l'abbiamo definita nel 
+	//throws e quindi va a cercare il gestore fuori dal metodo
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream(nomeFile));
+			RegressionTree n=(RegressionTree)in.readObject(); //readObject viene invocato per deserializzare l'oggetto(metodo della classe ObjectInputStream)
+			in.close();
+			return n;
+		}
+}

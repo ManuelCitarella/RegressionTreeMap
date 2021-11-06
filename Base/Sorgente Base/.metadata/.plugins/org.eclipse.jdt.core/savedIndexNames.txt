@@ -1,0 +1,4 @@
+INDEX VERSION 1.131+C:\Users\giorg\Desktop\MAP_Citarella_Iacobellis_Ladisa\Base\Sorgente Base\.metadata\.plugins\org.eclipse.jdt.core
+4054083886.index
+203917729.index
+3807039325.index

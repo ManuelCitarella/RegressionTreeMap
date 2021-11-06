@@ -1,0 +1,38 @@
+.root
+{
+	-fx-background-color: #ff4500;
+}
+
+.button
+{
+	-fx-text-fill:green;
+	-fx-background-color:  #90ee90;
+	-fx-padding:10 10 10 10; 
+	-fx-background-radius: 20 20 20 20; 
+	-fx-border-color:green;
+	-fx-border-radius: 20 20 20 20;
+	-fx-font-family:fantasy;
+	-fx-font-weight:bolder;
+	
+}
+
+.button:hover
+{
+	-fx-background-color:#333;
+	-fx-text-fill:#FFF;
+}
+
+.button:pressed
+{
+	-fx-background-color: green;
+	
+}
+
+.label
+{
+	-fx-text-fill: black;
+	-fx-font-family:cursive;
+	-fx-font-size:13px;
+	-fx-font-weight:bolder;
+	
+}

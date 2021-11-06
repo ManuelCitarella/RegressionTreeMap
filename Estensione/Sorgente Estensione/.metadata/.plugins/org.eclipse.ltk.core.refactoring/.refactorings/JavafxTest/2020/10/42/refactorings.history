@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;RulesController.java&apos; to &apos;ExampleFx/src/application&apos;&#x0D;&#x0A;- Original project: &apos;JavafxTest&apos;&#x0D;&#x0A;- Destination element: &apos;ExampleFx/src/application&apos;&#x0D;&#x0A;- Original element: &apos;application.RulesController.java&apos;" description="Copy compilation unit" destination="=ExampleFx/src&lt;application" element1="/src&lt;application{RulesController.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1603033507960" units="1" version="1.0"/>
+</session>

@@ -1,0 +1,21 @@
+package mainServer;
+import java.io.IOException;
+
+import server.MultiServer;
+
+public class MainTestServer {
+
+	public static void main(String[] args) {
+		
+
+		try {
+			MultiServer ms= new MultiServer(8080);
+			
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+}

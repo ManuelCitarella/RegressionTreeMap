@@ -1,0 +1,86 @@
+
+.root
+{
+	-fx-background-image:url("treeback.jpg");
+
+	
+	}
+
+
+.button
+{
+	-fx-text-fill:green;
+	-fx-background-color:  #90ee90;
+	-fx-padding:10 10 10 10; 
+	-fx-background-radius: 20 20 20 20;
+	-fx-border-color:green;
+	-fx-border-radius: 20 20 20 20;
+	-fx-font-family:fantasy;
+	-fx-font-weight:bolder;
+	
+}
+
+.button:hover
+{
+	-fx-background-color:#333;
+	-fx-text-fill:#FFF;
+}
+
+.button:pressed
+{
+	-fx-background-color: green;
+	
+}
+
+.label
+{
+	-fx-text-fill: black;
+	-fx-font-family:cursive;
+	-fx-font-size:13px;
+}
+
+#menulbl
+{
+	-fx-text-fill: black;
+	-fx-font-family:cursive;
+	-fx-font-size:16px;
+}
+.radio-button
+{
+	-fx-text-fill: black;
+	-fx-font-family:monospace;
+	-fx-font-size:15px;
+}
+
+.radio-button:selected
+{
+	-fx-text-fill: #008040;
+}
+
+.text-field
+{
+	-fx-text-fill: #008040;
+}
+
+#labelError
+{
+	-fx-text-fill:crimson;
+}
+
+#welcome
+{
+	
+	-fx-text-fill: Green;
+	-fx-font-family:sans-serif;
+	-fx-font-size:30px;
+	-fx-font-weight:bolder;
+}
+
+.text-area
+{
+	-fx-font-family:sans-serif;
+	-fx-text-fill: green;
+	-fx-opacity:3;
+	
+	
+}
